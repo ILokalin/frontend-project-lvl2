@@ -1,6 +1,7 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/ILokalin/frontend-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/ILokalin/frontend-project-lvl2/actions)
-
+[![test](https://github.com/ILokalin/frontend-project-lvl2/actions/workflows/test.yml/badge.svg)](https://github.com/ILokalin/frontend-project-lvl2/actions/workflows/test.yml)
+[![eslint](https://github.com/ILokalin/frontend-project-lvl2/actions/workflows/eslint.yml/badge.svg)](https://github.com/ILokalin/frontend-project-lvl2/actions/workflows/eslint.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/3a5b2f9caf8f8bae64a9/maintainability)](https://codeclimate.com/github/ILokalin/frontend-project-lvl2/maintainability)
 
 ### Install
