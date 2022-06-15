@@ -16,6 +16,5 @@ jobs:
         with:
           node-version: '16.x'
           cache: 'npm'
-        run: npm ci
-      - name: esLint
-        run: make lint
+      - run: npm ci
+      - run: make lint
