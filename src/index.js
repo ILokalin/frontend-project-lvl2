@@ -1,63 +1,70 @@
+// @ts-check
+
 import path from 'node:path';
 import process from 'node:process';
 import { readFileSync } from 'fs';
 import { Command } from 'commander';
 import _ from 'lodash';
+import { sign } from 'node:crypto';
 
-export const getDiff = (data1, data2) => {
-  const keys1 = Object.keys(data1);
-  const keys2 = Object.keys(data2);
+export const formatString = (data, key, sign = ' ') => `  ${sign} ${key}: ${data[key]}\n`;
 
-  return {
-    keys: _.union(keys1, keys2).sort(),
-    data1,
-    data2,
-  }
-};
-
-export const getReport = ({ keys, data1, data2 }, options) => {
+export const getReport = ({ keys, dataReference, dataCompare }) => {
   let report = '{\n';
   for (const key of keys) {
-    if (!data2.hasOwnProperty(key)) {
-      report += `  - ${key}: ${data1[key]}\n`;
+    const isRemovedKey = !(key in dataCompare);
+    if (isRemovedKey) {
+      report += formatString(dataReference, key, '-');
       continue;
     }
-    if (!data1.hasOwnProperty(key)) {
-      report += `  + ${key}: ${data2[key]}\n`;
+
+    const isAddedKey = !(key in dataReference);
+    if (isAddedKey) {
+      report += formatString(dataCompare, key, '+');
       continue;
     }
-    if (data1[key] === data2[key]) {
-      report += `    ${key}: ${data1[key]}\n`;
+
+    const isEqualFields = dataReference[key] === dataCompare[key];
+    if (isEqualFields) {
+      report += formatString(dataReference, key);
       continue;
     }
-    report += `  - ${key}: ${data1[key]}\n`;
-    report += `  + ${key}: ${data2[key]}\n`;
+
+    report += formatString(dataReference, key, '-');
+    report += formatString(dataCompare, key, '+');
   }
-  return report + '\n}';
+  return report + '}';
 };
 
 export const loadData = (filepath) => {
   try {
     const data = readFileSync(path.resolve(filepath), 'utf8');
     return JSON.parse(data);
-  } catch(error) {
+  } catch (error) {
     console.log(`Error reading file: ${error}`);
   }
-}
+};
 
-export const genDiff = (filepath1, filepath2, options) => {
-  return getReport(getDiff(loadData(filepath1), loadData(filepath2)), options);
+export const getKeys = (dataReference, dataCompare) => {
+  const keys1 = Object.keys(dataReference);
+  const keys2 = Object.keys(dataCompare);
+  return {
+    keys: _.union(keys1, keys2).sort(),
+    dataReference,
+    dataCompare,
+  };
 }
+export const genDiff = (filepath1, filepath2) => getReport(getKeys(loadData(filepath1), loadData(filepath2)));
 
 export const app = () => {
-  const program = new Command;
+  const program = new Command();
   program
     .version('1.0.0')
     .description('Compares two configuration files and shows a difference.')
     .option('-f, --format <type>', 'output format')
     .arguments('<filepath1> <filepath2>')
-    .action((filepath1, filepath2, options) => {
-      console.log(genDiff(filepath1, filepath2, options));
+    .action((filepath1, filepath2) => {
+      console.log(genDiff(filepath1, filepath2));
     })
     .parse(process.argv);
 };
