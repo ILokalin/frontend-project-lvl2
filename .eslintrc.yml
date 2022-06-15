@@ -13,7 +13,7 @@ extends:
   - 'plugin:jest/recommended'
 
 parserOptions:
-  ecmaVersion: es2022
+  ecmaVersion: latest
 
 rules:
   no-console: 0
@@ -22,3 +22,4 @@ rules:
     - ignorePackages
     - js: always
   no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }]
+  max-len: [2, 120]

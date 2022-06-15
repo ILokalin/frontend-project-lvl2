@@ -1,4 +1,4 @@
-name: tests
+name: eslint
 
 on:
   push:
@@ -17,4 +17,4 @@ jobs:
           node-version: '16.x'
           cache: 'npm'
       - run: npm ci
-      - run: make lint
+      - run: make test-coverage

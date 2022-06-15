@@ -1,48 +1,47 @@
 // @ts-check
 
-import path from 'node:path';
-import process from 'node:process';
+import path from 'path';
+import process from 'process';
 import { readFileSync } from 'fs';
 import { Command } from 'commander';
 import _ from 'lodash';
-import { sign } from 'node:crypto';
 
 export const formatString = (data, key, sign = ' ') => `  ${sign} ${key}: ${data[key]}\n`;
 
 export const getReport = ({ keys, dataReference, dataCompare }) => {
   let report = '{\n';
+  // eslint-disable-next-line no-restricted-syntax
   for (const key of keys) {
     const isRemovedKey = !(key in dataCompare);
+    const isAddedKey = !(key in dataReference);
+    const isEqualFields = dataReference[key] === dataCompare[key];
+    const isUpdate = !(isRemovedKey || isAddedKey || isEqualFields);
+
     if (isRemovedKey) {
       report += formatString(dataReference, key, '-');
-      continue;
     }
-
-    const isAddedKey = !(key in dataReference);
     if (isAddedKey) {
       report += formatString(dataCompare, key, '+');
-      continue;
     }
-
-    const isEqualFields = dataReference[key] === dataCompare[key];
     if (isEqualFields) {
       report += formatString(dataReference, key);
-      continue;
     }
-
-    report += formatString(dataReference, key, '-');
-    report += formatString(dataCompare, key, '+');
+    if (isUpdate) {
+      report += formatString(dataReference, key, '-');
+      report += formatString(dataCompare, key, '+');
+    }
   }
-  return report + '}';
+  return `${report}}`;
 };
 
 export const loadData = (filepath) => {
+  let data = {};
   try {
-    const data = readFileSync(path.resolve(filepath), 'utf8');
-    return JSON.parse(data);
+    data = readFileSync(path.resolve(filepath), 'utf8');
   } catch (error) {
     console.log(`Error reading file: ${error}`);
   }
+  return JSON.parse(data);
 };
 
 export const getKeys = (dataReference, dataCompare) => {
@@ -53,7 +52,8 @@ export const getKeys = (dataReference, dataCompare) => {
     dataReference,
     dataCompare,
   };
-}
+};
+
 export const genDiff = (filepath1, filepath2) => getReport(getKeys(loadData(filepath1), loadData(filepath2)));
 
 export const app = () => {
