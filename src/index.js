@@ -35,7 +35,7 @@ export const getReport = ({ keys, dataReference, dataCompare }) => {
 };
 
 export const loadData = (filepath) => {
-  let data = {};
+  let data = '{}';
   try {
     data = readFileSync(path.resolve(filepath), 'utf8');
   } catch (error) {
