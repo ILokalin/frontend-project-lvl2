@@ -27,18 +27,16 @@
   },
   "homepage": "https://github.com/ILokalin/frontend-project-lvl2#readme",
   "dependencies": {
-    "commander": "9.3.0",
+    "commander": "^9.3.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.18.2",
-    "@jest/globals": "^28.0.3",
-    "eslint": "^8.14.0",
+    "eslint": "^8.18.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.1.5",
-    "jest": "^28.0.3",
-    "jest-cli": "^28.0.3",
+    "eslint-plugin-jest": "^26.5.3",
+    "jest": "^28.1.1",
+    "jest-cli": "^28.1.1",
     "simple-git-hooks": "^2.8.0"
   }
 }
