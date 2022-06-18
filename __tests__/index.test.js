@@ -1,13 +1,13 @@
 import path from 'path';
-import genDiff from '@hexlet/code';
+import genDiff from '../src/index.js';
 
-const getActualPath = filename => path.join(__dirname, '..', '__fixtures__', filename);
+const getActualPath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
 describe('main app test', () => {
   const filepath1 = getActualPath('file_1.json');
   const filepath2 = getActualPath('file_2.json');
 
-const expected = `{
+  const expected = `{
   - follow: false
     host: hexlet.io
   - proxy: 123.234.53.22
