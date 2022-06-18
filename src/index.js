@@ -1,14 +1,12 @@
 // @ts-check
 
 import path from 'path';
-import process from 'process';
 import { readFileSync } from 'fs';
-import { Command } from 'commander';
 import _ from 'lodash';
 
-export const formatString = (data, key, sign = ' ') => `  ${sign} ${key}: ${data[key]}\n`;
+const formatString = (data, key, sign = ' ') => `  ${sign} ${key}: ${data[key]}\n`;
 
-export const getReport = ({ keys, dataReference, dataCompare }) => {
+const getReport = ({ keys, dataReference, dataCompare }) => {
   let report = '{\n';
   // eslint-disable-next-line no-restricted-syntax
   for (const key of keys) {
@@ -34,7 +32,7 @@ export const getReport = ({ keys, dataReference, dataCompare }) => {
   return `${report}}`;
 };
 
-export const loadData = (filepath) => {
+const loadData = (filepath) => {
   let data = '{}';
   try {
     data = readFileSync(path.resolve(filepath), 'utf8');
@@ -44,7 +42,7 @@ export const loadData = (filepath) => {
   return JSON.parse(data);
 };
 
-export const getKeys = (dataReference, dataCompare) => {
+const getKeys = (dataReference, dataCompare) => {
   const keys1 = Object.keys(dataReference);
   const keys2 = Object.keys(dataCompare);
   return {
@@ -54,19 +52,6 @@ export const getKeys = (dataReference, dataCompare) => {
   };
 };
 
-export const genDiff = (filepath1, filepath2) => getReport(getKeys(loadData(filepath1), loadData(filepath2)));
-
-export const app = () => {
-  const program = new Command();
-  program
-    .version('1.0.0')
-    .description('Compares two configuration files and shows a difference.')
-    .option('-f, --format <type>', 'output format')
-    .arguments('<filepath1> <filepath2>')
-    .action((filepath1, filepath2) => {
-      console.log(genDiff(filepath1, filepath2));
-    })
-    .parse(process.argv);
-};
+const genDiff = (filepath1, filepath2) => getReport(getKeys(loadData(filepath1), loadData(filepath2)));
 
 export default genDiff;
