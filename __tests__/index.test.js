@@ -1,24 +1,22 @@
-import { expect, it } from '@jest/globals';
-import { formatString, getReport } from '../src/index.js';
+import path from 'path';
+import genDiff from '@hexlet/code';
+
+const getActualPath = filename => path.join(__dirname, '..', '__fixtures__', filename);
 
 describe('main app test', () => {
-  it('formatString', () => {
-    expect(formatString({ testKey: 'value' }, 'testKey', '-')).toBe('  - testKey: value\n');
-    expect(formatString({ testKey: 'value' }, 'testKey', '+')).toBe('  + testKey: value\n');
-    expect(formatString({ testKey: 'value' }, 'testKey')).toBe('    testKey: value\n');
-  });
-  it('getReport', () => {
-    const dataReference = { keyNotChanged: 'test', keyUpdated: 20, keyRemoved: 2 };
-    const dataCompare = { keyNotChanged: 'test', keyUpdated: 30, keyAdded: 100 };
-    const keys = ['keyNotChanged', 'keyUpdated', 'keyAdded', 'keyRemoved'];
+  const filepath1 = getActualPath('file_1.json');
+  const filepath2 = getActualPath('file_2.json');
 
-    const expected = `{
-    keyNotChanged: test
-  - keyUpdated: 20
-  + keyUpdated: 30
-  + keyAdded: 100
-  - keyRemoved: 2
+const expected = `{
+  - follow: false
+    host: hexlet.io
+  - proxy: 123.234.53.22
+  - timeout: 50
+  + timeout: 20
+  + verbose: true
 }`;
-    expect(getReport({ dataCompare, dataReference, keys })).toBe(expected);
+
+  it('genDiff json', () => {
+    expect(genDiff(filepath1, filepath2)).toBe(expected);
   });
 });
