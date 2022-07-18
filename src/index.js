@@ -1,8 +1,12 @@
 // @ts-check
-
 import path from 'path';
 import { readFileSync } from 'fs';
+import { parse } from './parsers.js';
 import _ from 'lodash';
+
+const getFormat = (filepath) => path.extname(filepath).slice(1);
+
+const getData = (filepath) => parse(readFileSync(filepath, 'utf8'), getFormat(filepath));
 
 const formatString = (data, key, sign = ' ') => `  ${sign} ${key}: ${data[key]}\n`;
 
@@ -32,16 +36,6 @@ const getReport = ({ keys, dataReference, dataCompare }) => {
   return `${report}}`;
 };
 
-const loadData = (filepath) => {
-  let data = '{}';
-  try {
-    data = readFileSync(path.resolve(filepath), 'utf8');
-  } catch (error) {
-    console.log(`Error reading file: ${error}`);
-  }
-  return JSON.parse(data);
-};
-
 const getKeys = (dataReference, dataCompare) => {
   const keys1 = Object.keys(dataReference);
   const keys2 = Object.keys(dataCompare);
@@ -52,6 +46,11 @@ const getKeys = (dataReference, dataCompare) => {
   };
 };
 
-const genDiff = (filepath1, filepath2) => getReport(getKeys(loadData(filepath1), loadData(filepath2)));
+
+const genDiff = (filepath1, filepath2) => {
+  const data1 = getData(path.resolve(filepath1));
+  const data2 = getData(path.resolve(filepath2));
+  return getReport(getKeys(data1, data2));
+};
 
 export default genDiff;
