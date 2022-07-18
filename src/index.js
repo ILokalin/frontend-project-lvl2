@@ -1,8 +1,8 @@
 // @ts-check
 import path from 'path';
 import { readFileSync } from 'fs';
-import { parse } from './parsers.js';
 import _ from 'lodash';
+import parse from './parsers.js';
 
 const getFormat = (filepath) => path.extname(filepath).slice(1);
 
@@ -45,7 +45,6 @@ const getKeys = (dataReference, dataCompare) => {
     dataCompare,
   };
 };
-
 
 const genDiff = (filepath1, filepath2) => {
   const data1 = getData(path.resolve(filepath1));

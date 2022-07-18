@@ -1,7 +1,7 @@
 // @ts-check
 import yaml from 'js-yaml';
 
-export const parse = (data, format) => {
+export default (data, format) => {
   switch (format) {
     case 'yaml':
     case 'yml':
@@ -9,8 +9,8 @@ export const parse = (data, format) => {
 
     case 'json':
       return JSON.parse(data);
-      
+
     default:
       throw new Error(`Unknow format: ${format}`);
   }
-} 
+};
