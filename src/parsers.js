@@ -11,6 +11,6 @@ export default (data, format) => {
       return JSON.parse(data);
 
     default:
-      throw new Error(`Unknow format: ${format}`);
+      throw new Error(`Unknown format: ${format}`);
   }
 };
